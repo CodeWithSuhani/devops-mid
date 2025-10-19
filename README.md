@@ -48,3 +48,11 @@ output
 
 <br>
 
+# What was added in the 2nd commit on Oct 19 at 23: 22
+## 1. Added a help menu inside function help to call functions non iteratively
+2. added a function y to make program more user friendly
+3. in the beggining (function y) we need enter either y to see menu or n to exit the shell script or else the function y is called recursively
+4. on enter y dropdown menu opens and closes on entering 6  we have considered the best case senario that is a no. between 1-6 is entered only
+5. however in the next commit i would make sure to add one more to handle a non ideal situation
+6. i also add 1-1 line to each of the functions to redirect to main menu after execution.
+7. NEXT few COMMITS with be focused on adding function ADD_USERS AND COMMENTS AND ADDITIONAL NEEDED REFINEMENTS.
