@@ -20,7 +20,8 @@ for (( i=1; i <= "$2" ; i++ )) do
 		echo "Task Unsuccesfull"
 		echo "$?" 
 	fi
-	done 
+	done
+help 
 }
 
 function sys_report() {
@@ -31,7 +32,7 @@ free -h >> "$1"
 echo "CPU Info added" >> "$1"
 lscpu >> "$1"
 echo "Top 5 memory consuming processes" >> "$1"
-top -o %MEM | head -n 5+7  >> "$1"
+top -o %MEM | head -n 12  >> "$1"
 echo "Top 5 cpu consuming processes" >> "$1"
 ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5 >> "$1"
  if [[ "$?" == 0 ]]; then
@@ -40,8 +41,9 @@ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5 >> "$1"
                 echo "Task Unsuccesfull"
         fi
         echo "$?"
+help
 }
-
+#sys_report system_reports.txt
 
 function process_manage() {
 case "$2" in 
@@ -68,7 +70,12 @@ esac
                 echo "Task Unsuccesfull"
 		echo "$?"
         fi
+help
 }
+#process_manage suhani list_stopped
+#process_manage suhani list_zombies
+#process_manage suhani kill_stopped
+#process_manage suhani kill_zombies
 
 function perm_owner() {
 un="$1"
@@ -91,17 +98,70 @@ chown -R "$own":"$grp" "$pa"
         else
                 echo "Task Unsuccesfull"
 		echo "$?"
-        fi 
+        fi
+help 
 }
+#perm_owner suhani /dir1 755 suhani suhani
+
 function help() {
-echo "Example Commands"
-echo "./sys_manager.sh add_users users.txt- currently unavailable"
-echo "./sys_manager.sh setup_projects alice 5"
-echo "./sys_manager.sh sys_report sysinfo.txt"
-echo "./sys_manager.sh process_manage bob list_zombies"
-echo "./sys_manager.sh perm_owner alice /home/alice/projects 755 alice alice"
-echo "./sys_manager.sh help"
-echo "These may help to execute your tasks"
-echo "Please avoid adding false usernames and non existing files and directories"
-echo "thankyou"
+echo "HELP MENU"
+echo " 1 : add_users."
+echo " 2 : setup projects."
+echo " 3 : system reports."
+echo " 4 : process manager."
+echo " 5 : changing permission and ownership."
+echo " 6 : to exit dropdown menu."
+read -p "Enter your choice" ch
+case "$ch" in
+	1)
+		add_users
+		;;
+	2)
+		read -p "Enter username: " un
+                read -p "Enter the number of projects: " n
+		setup_projects "$un" "$n"
+		;;
+	3)
+		sys_report system_reports.txt
+		;;
+	4)
+		read -p "Enter username: " un
+		echo "Enter list_stopped to list stopped processes."
+		echo "Enter list_zombies to list zombie processes."
+		echo "Enter kill_stopped to kill stopped processes."
+		echo "Enter kill_zombies to kill zombie processes. "
+		read c
+		process_manager "$un" "$c"
+		;;
+	5)
+		read -p "Enter username : " un
+		read -p "Enter path to directorymor file : " di
+		read -p "Enter desired permisions : " pe
+		read -p "Enter owner name : " o
+		read -p "Enter group name : " g 
+		perm_owner "$un" "$di" "$pe" "$o" "$g"
+		;;
+	6)
+		echo "Redirecting to welcome message."
+		y
+		;;
+esac
 }
+function y() {
+echo "Welcom to User \& System Management Automation program.."  
+read -p "Enter 'y' to see the dropdown  menu or  'n' to exit user & System management Automation program." ok
+case "$ok" in
+	"y")
+		help
+		;;
+	"n")
+		echo "Thanks for visiting!"
+		exit 0
+		;;
+	*)
+		echo "Wrong choice"
+		y
+		;;
+esac
+}
+y
